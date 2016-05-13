@@ -1,0 +1,242 @@
+<div ng-cloak class="white-bg background-wrapper">
+  <md-content>
+    <md-tabs md-dynamic-height md-border-bottom >   
+      <md-tab label="Tu Cancha" >
+        <md-content >
+
+
+          <!--MAP RELATED STUFF  -->
+          <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+
+            <ui-gmap-marker ng-repeat="venue in venues track by $index" idKey='$index' coords='venue.coords' > 
+              <ui-gmap-window isIconVisibleOnClick="true" show="true">
+                  <div>{{venue.name}}</div>
+              </ui-gmap-window>
+            </ui-gmap-marker>
+
+            
+
+          </ui-gmap-google-map>
+          <!--END MAP RELATED STUFF -->
+
+            
+             
+        </md-content>
+      </md-tab>
+      <md-tab label="Reserva Ya!">
+        <md-content>
+
+          <div class="datatime_wrapper" ng-hide="isHidden" >
+            <div class="modal-body">
+                <p>Hola {{user_name}} elige la fecha en la que te gustaría reservar tu cancha!</p>
+            </div>
+                     
+            
+            
+            <div class="container">
+              <center><md-input-container>
+                  <input id="datatimepicker" type="text"  value="{{ data.dateDropDownInput | date:'dd-MM-yyyy hh:mm a' }}" readonly ></center>
+            </div>
+                  <center><datetimepicker data-ng-model="data.dateDropDownInput" data-datetimepicker-config="{ minView: 'hour' }"/>
+              </md-input-container></center>
+            
+
+
+
+
+              
+              
+              <center><md-button  type="button" ng-click="checkAvailableFilds()" class="md-raised"><span class="ng-scope white">Buscar Canchas Disponibles</span>
+              </md-button></center>
+            
+            
+            
+              <br>
+          </div>
+                             
+            <loading></loading>
+
+
+
+            <div class="results_fields_wrapper" ng-hide="resultIsHidden">
+
+                <table class="table table-striped" >
+                  <tr>
+                    
+                      <th><center>Local</center></th>
+                      <th><center>Número </center></th>
+                      <th><center>Tipo</center></th>
+                    
+                  </tr>
+                    <tr ng-repeat="field in fields track by $index" >
+                      
+                        <td ng-click="makeAReservation(field)" title="'Cancha'"  ><i class="fa fa-futbol-o" aria-hidden="true"></i>
+                            {{field.company}}</td>
+                        <td ng-click="makeAReservation(field)" title="'Número'"  >
+                            <center>{{field.name}}</center></td>
+                        <td ng-click="makeAReservation(field)" title="'Tipo'"  >
+                            <center>{{field.type}}</center></td>
+                      
+                    </tr>
+                </table>
+
+
+              <center><md-button ng-click="reSearch()" type="button" class="md-raised"><span class="ng-scope white">Buscar En Otra Fecha</span>
+              </md-button></center>
+            </div>
+        </md-content>
+      </md-tab>
+
+      <md-tab label="Canchas" data-ng-init="VenuesInfo()">
+        <md-content class="md-padding">
+
+          <div flex-xs="" flex-gt-xs="50" layout="column">
+
+            <md-card ng-repeat="venue in venues track by $index">
+                <md-card-content>
+
+                      <div style="position: relative; left: 0; top: 0;">
+
+                        <img ng-src="{{venue.image}}" class="md-card-image re_size_image" alt="{{venue.name}}">
+
+                        <img ng-src="{{venue.logo}}" class="re_size_logo"/>
+                      </div
+
+
+
+                      <md-list>
+
+                        <md-list-item class="md-1-line">
+                          <div class="md-list-item-text">
+                            
+                            <p><i class="fa fa-futbol-o" aria-hidden="true"></i> <b>Establecimiento: </b> {{venue.name}}</p>
+                            
+                          </div>
+
+                        </md-list-item>
+
+                        <md-list-item class="md-1-line">
+                          <div class="md-list-item-text">
+                            
+                            <p><i class="fa fa-globe" aria-hidden="true"></i> <b>Ciudad: </b> {{venue.city}}</p>
+                            
+                          </div>
+
+                        </md-list-item>
+
+                        <md-list-item class="md-1-line">
+                          <div class="md-list-item-text">
+                            
+                            <p><i class="fa fa-compass" aria-hidden="true"></i> <b>Dirección: </b> {{venue.address}}</p>
+                            
+                          </div>
+                          
+                        </md-list-item>
+
+                        <md-list-item class="md-1-line">
+                          <div class="md-list-item-text">
+                            
+                            <p><i class="fa fa-phone" aria-hidden="true"></i> <b>Teléfono: </b> {{venue.phone}}</p>
+                            
+                          </div>
+                          
+                        </md-list-item>
+
+                        <md-list-item class="md-1-line">
+                          <div class="md-list-item-text">
+                            
+                            <p><i class="fa fa-clock-o" aria-hidden="true"></i> <b>Horario: </b> {{venue.open}} - {{venue.close}} (Hora Militar)</p>
+                            
+                          </div>
+                          
+                        </md-list-item>
+                      </md-list>
+                  
+                   
+                    </md-card-content>
+                  
+                  </md-card>
+
+
+          </div>
+
+
+    
+          
+          <br>
+          <br>
+          <br>
+
+
+
+      
+        
+        </md-content>
+      </md-tab>
+
+
+
+      <md-tab label="Mis Reservas" data-ng-init="myReservations()">
+        <md-content >
+
+          <table class="table table-striped" >
+            <tr>
+
+                <th><center>Local</center></th>
+
+                <th><center>Cancha</center></th>
+              
+                <th><center>Fecha</center></th>
+                
+  
+              
+            </tr>
+              <tr ng-repeat="reservation in reservations track by $index" >
+
+
+                  <td ><i class="fa fa-futbol-o" aria-hidden="true"></i>
+                      {{reservation.venueName}}</td>
+
+                  <center><td >
+                      {{reservation.fieldName}}</td></center>
+                
+                  <center><td >
+                      {{reservation.date}}</td></center>
+                     
+                
+              </tr>
+          </table>
+           
+        </md-content>
+      </md-tab>
+
+      <md-tab label="Opciones">
+        <md-content class="md-padding">
+          <li ng-cloak ng-show="loggedIn()"><a href="#account">{{ currentUser.get("username") }}</a></li>
+          <div class="modal-body">
+              <b>Hola {{user_name}} , gracias por preferirnos, te esperamos pronto!</b>
+          </div>
+          <md-button ng-click="logOut()" class="md-raised"><span class="ng-scope white">Cerrar sesión</span>
+
+       
+        </md-content>
+      </md-tab>
+
+    </md-tabs>
+  </md-content>
+
+
+</div>
+<br><br>
+<br>
+
+<div align="center">
+   <img class="fix_name" src="img/name.png">                    
+</div>
+
+
+
+                <!-- End # DIV Form -->
+
+
+  
